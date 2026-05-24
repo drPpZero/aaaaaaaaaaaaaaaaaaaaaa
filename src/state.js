@@ -8,6 +8,7 @@ export const state = {
   sequence: [],
   isPlaying: false,
   currentTime: 0,
+  previewTime: 0,
   currentActionIndex: -1,
   errorMessage: "",
   maxSequenceLength: 20,
@@ -24,6 +25,7 @@ export function notify() {
 
 export function selectAction(actionId) {
   state.selectedActionId = actionId;
+  state.previewTime = 0;
   state.errorMessage = "";
   notify();
 }
@@ -97,23 +99,29 @@ export function resetPlayback() {
   notify();
 }
 
-export function setCurrentTime(seconds) {
+export function setCurrentTime(seconds, silent = false) {
   const totalTime = getTotalTime(state.sequence);
 
   state.currentTime = clamp(Number(seconds) || 0, 0, totalTime);
   state.currentActionIndex = getCurrentActionIndex(state.sequence, state.currentTime);
 
-  if (totalTime > 0 && state.currentTime >= totalTime) {
+if (totalTime > 0 && state.currentTime >= totalTime) {
     state.currentTime = totalTime;
     state.isPlaying = false;
+    notify();
+  } else {
+    if (!silent) notify();
   }
-
-  notify();
 }
 
 export function advancePlayback(deltaSeconds) {
+  if (state.mode === "edit" && state.selectedActionId) {
+    state.previewTime += deltaSeconds;
+    return;
+  }
+  
   if (state.mode !== "play" || !state.isPlaying) return;
-  setCurrentTime(state.currentTime + deltaSeconds);
+  setCurrentTime(state.currentTime + deltaSeconds, true);
 }
 
 function makeInstanceId() {

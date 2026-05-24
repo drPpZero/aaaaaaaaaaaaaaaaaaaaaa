@@ -1,94 +1,147 @@
 export const ACTIONS = [
   {
-    id: "loop_jump",
-    name: "Loop Jump",
-    category: "Jump",
-    requiredTime: 3,
-    difficulty: "Medium",
-    description: "A jump that takes off from a back outside edge and lands on the same back outside edge.",
-    iconPath: "loop",
-    bvhPath: "./assets/bvh/loop_jump.bvh",
+    id: "sideStep",
+    name: "사이드 스텝",
+    category: "Step / Spiral",
+    requiredTime: 4,
+    difficulty: "Low",
+    description: "기본적인 사이드 스텝 동작입니다.",
+    iconPath: "side"
   },
   {
-    id: "upright_spin",
-    name: "Upright Spin",
-    category: "Spin",
-    requiredTime: 4,
+    id: "toeLoop",
+    name: "룹 점프",
+    category: "Jump",
+    requiredTime: 1.5,
     difficulty: "Medium",
-    description: "A spin performed in an upright position while rotating on one foot.",
-    iconPath: "upright",
-    bvhPath: "./assets/bvh/upright_spin.bvh",
+    description: "기본적인 회전 점프 동작입니다.",
+    iconPath: "loop"
+  },
+  {
+    id: "splitJump",
+    name: "스플릿 점프",
+    category: "Jump",
+    requiredTime: 3,
+    difficulty: "High",
+    description: "공중에서 다리를 앞뒤로 크게 벌리는 점프입니다.",
+    iconPath: "split"
+  },
+  {
+    id: "uprightSpin",
+    name: "업라이트 스핀",
+    category: "Spin",
+    requiredTime: 5,
+    difficulty: "Medium",
+    description: "서서 빠르게 회전하는 동작입니다.",
+    iconPath: "upright"
+  },
+  {
+    id: "sitSpin",
+    name: "싯 스핀",
+    category: "Spin",
+    requiredTime: 5,
+    difficulty: "High",
+    description: "낮은 자세로 앉아서 회전하는 동작입니다.",
+    iconPath: "sit"
   },
   {
     id: "spiral",
-    name: "Spiral",
+    name: "스파이럴",
     category: "Step / Spiral",
-    requiredTime: 4,
+    requiredTime: 5,
     difficulty: "Medium",
-    description: "The action of lifting one leg back, tilting the upper body forward, and sliding.",
-    iconPath: "spiral",
-    bvhPath: "./assets/bvh/spiral.bvh",
-  },
-  {
-    id: "split_jump",
-    name: "Split Jump",
-    category: "Jump",
-    requiredTime: 3,
-    difficulty: "Medium",
-    description: "A jump where the skater extends both legs into a split-like pose in the air.",
-    iconPath: "split",
-    bvhPath: "./assets/bvh/split_jump.bvh",
-  },
-  {
-    id: "sit_spin",
-    name: "Sit Spin",
-    category: "Spin",
-    requiredTime: 4,
-    difficulty: "Hard",
-    description: "A spin performed in a low sitting position with one leg extended forward.",
-    iconPath: "sit",
-    bvhPath: "./assets/bvh/sit_spin.bvh",
-  },
-  {
-    id: "side_step",
-    name: "Side Step",
-    category: "Step / Spiral",
-    requiredTime: 2,
-    difficulty: "Easy",
-    description: "A short step sequence that moves the skater sideways across the ice.",
-    iconPath: "side",
-    bvhPath: "./assets/bvh/side_step.bvh",
-  },
+    description: "한쪽 다리를 뒤로 높게 들고 활주하는 동작입니다.",
+    iconPath: "spiral"
+  }
 ];
 
-export function getActionById(actionId) {
-  return ACTIONS.find((action) => action.id === actionId) ?? null;
+export const TRANSITION_TIME = 3; // 3 seconds transition
+
+export function getActionById(id) {
+  return ACTIONS.find(action => action.id === id);
 }
 
 export function getTotalTime(sequence) {
-  return sequence.reduce((sum, sequenceItem) => {
-    const action = getActionById(sequenceItem.actionId);
-    return sum + (action ? action.requiredTime : 0);
-  }, 0);
+  if (sequence.length === 0) return 0;
+  
+  let total = 0;
+  for (let i = 0; i < sequence.length; i++) {
+    const action = getActionById(sequence[i].actionId);
+    total += (action ? action.requiredTime : 0);
+    
+    // Add transition time between actions
+    if (i < sequence.length - 1) {
+      total += TRANSITION_TIME;
+    }
+  }
+  return total;
 }
 
+/**
+ * Returns the index in the sequence or information about being in a transition
+ */
 export function getCurrentActionIndex(sequence, currentTime) {
   if (sequence.length === 0) return -1;
-
-  let startTime = 0;
-
-  for (let index = 0; index < sequence.length; index += 1) {
-    const action = getActionById(sequence[index].actionId);
+  
+  let elapsed = 0;
+  for (let i = 0; i < sequence.length; i++) {
+    const action = getActionById(sequence[i].actionId);
     if (!action) continue;
-
-    const endTime = startTime + action.requiredTime;
-
-    if (currentTime >= startTime && currentTime < endTime) {
-      return index;
+    
+    // Check if we are in the action period
+    if (currentTime >= elapsed && currentTime < elapsed + action.requiredTime) {
+      return i;
     }
-
-    startTime = endTime;
+    elapsed += action.requiredTime;
+    
+    // Check if we are in the transition period
+    if (i < sequence.length - 1) {
+      if (currentTime >= elapsed && currentTime < elapsed + TRANSITION_TIME) {
+        return i; 
+      }
+      elapsed += TRANSITION_TIME;
+    }
   }
-
   return sequence.length - 1;
+}
+
+/**
+ * Helper to determine if the current time is within a transition period
+ */
+export function getPlaybackInfo(sequence, currentTime) {
+  if (sequence.length === 0) return { action: null, isTransition: false, localTime: 0 };
+  
+  let elapsed = 0;
+  for (let i = 0; i < sequence.length; i++) {
+    const action = getActionById(sequence[i].actionId);
+    if (!action) continue;
+    
+    // Action period
+    if (currentTime >= elapsed && currentTime < elapsed + action.requiredTime) {
+      return { 
+        action, 
+        isTransition: false, 
+        localTime: currentTime - elapsed,
+        index: i
+      };
+    }
+    elapsed += action.requiredTime;
+    
+    // Transition period
+    if (i < sequence.length - 1) {
+      if (currentTime >= elapsed && currentTime < elapsed + TRANSITION_TIME) {
+        return { 
+          action: getActionById("sideStep"), 
+          isTransition: true, 
+          localTime: currentTime - elapsed,
+          index: i
+        };
+      }
+      elapsed += TRANSITION_TIME;
+    }
+  }
+  
+  // Fallback to last action
+  const lastAction = getActionById(sequence[sequence.length - 1].actionId);
+  return { action: lastAction, isTransition: false, localTime: lastAction.requiredTime, index: sequence.length - 1 };
 }

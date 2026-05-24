@@ -5,9 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Figure Skating Sequence Planner</title>
     <link rel="stylesheet" href="./style.css" />
+    
+    <script id="vertex-shader" type="x-shader/x-vertex">
+        attribute vec4 vPosition;
+        attribute vec4 vColor;
+        varying vec4 fColor;
+
+        uniform mat4 modelViewMatrix;
+        uniform mat4 projectionMatrix;
+
+        void main() {
+            gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+            fColor = vColor; 
+        }
+    </script>
+
+    <script id="fragment-shader" type="x-shader/x-fragment">
+        precision mediump float;
+        varying vec4 fColor;
+
+        void main() {
+            gl_FragColor = fColor;
+        }
+    </script>
   </head>
   <body>
     <div id="app"></div>
+    <script src="./src/utils/webgl-utils.js"></script>
+    <script src="./src/utils/initShaders.js"></script>
+    <script src="./src/utils/MV.js"></script>
     <script type="module" src="./src/main.js"></script>
   </body>
 </html>

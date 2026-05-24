@@ -21,7 +21,7 @@ export function renderTimeBar(container) {
   `;
 
   container.querySelector("#timeBar").addEventListener("input", (event) => {
-    setCurrentTime(Number(event.target.value));
+    setCurrentTime(Number(event.target.value, true));
   });
 }
 

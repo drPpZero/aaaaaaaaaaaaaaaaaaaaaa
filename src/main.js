@@ -29,6 +29,25 @@ function loop(now) {
     const sequenceItem = state.sequence[state.currentActionIndex] ?? state.sequence[0];
     const action = sequenceItem ? getActionById(sequenceItem.actionId) : null;
     renderCurrentFrame(action, state.currentTime);
+
+    const timeBar = document.querySelector("#timeBar");
+    const timeText = document.querySelector(".current-time");
+    if (timeBar) timeBar.value = state.currentTime;
+    if (timeText) {
+      const minutes = Math.floor(state.currentTime / 60);
+      const seconds = Math.floor(state.currentTime % 60);
+      timeText.textContent = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    }
+
+    const cards = document.querySelectorAll(".sequence-card");
+    cards.forEach((card, idx) => {
+      if (idx === state.currentActionIndex) card.classList.add("active");
+      else card.classList.remove("active");
+    });
+
+  } else if (state.mode === "edit" && state.selectedActionId) {
+    const action = getActionById(state.selectedActionId);
+    renderCurrentFrame(action, state.previewTime);
   }
 
   requestAnimationFrame(loop);

@@ -1,61 +1,65 @@
-import { drawModel } from "./model.js";
-import { createSceneBackground } from "./scene.js";
-import { getCameraSettings } from "./camera.js";
+import { initWebGL, renderWebGL, updateAnimation } from "./webgl-engine.js";
+import { state } from "../state.js";
+import { getActionById, getPlaybackInfo } from "../actions.js";
 
 let canvas = null;
-let context = null;
 let mode = "edit";
-let zoom = 1;
+
+let handleResize = null;
 
 export function createViewer(container, nextMode) {
   mode = nextMode;
   container.innerHTML = "";
 
   canvas = document.createElement("canvas");
+  canvas.style.width = "100%";
+  canvas.style.height = "100%";
   container.appendChild(canvas);
-  context = canvas.getContext("2d");
 
   resizeCanvas();
-  window.onresize = resizeCanvas;
+  initWebGL(canvas);
+
+  if (handleResize) {
+    window.removeEventListener("resize", handleResize);
+  }
+  
+  handleResize = () => {
+    resizeCanvas();
+    initWebGL(canvas);
+  };
+  
+  window.addEventListener("resize", handleResize);
 }
 
 export function setZoom(direction) {
-  zoom += direction * 0.1;
-  zoom = Math.max(0.7, Math.min(1.8, zoom));
+  // WebGL zoom could be implemented by modifying camera eye or projection
 }
 
 export function renderCurrentFrame(action, currentTime = 0) {
-  if (!canvas || !context) return;
+  if (!canvas) return;
 
-  resizeCanvas();
+  let animMode = "sideStep";
+  let localTime = currentTime;
 
-  const rect = canvas.getBoundingClientRect();
-  const width = rect.width;
-  const height = rect.height;
-
-  context.clearRect(0, 0, width, height);
-  createSceneBackground(context, width, height, Boolean(action));
-
-  if (!action) {
-    context.fillStyle = "rgba(13, 35, 75, 0.38)";
-    context.font = `${Math.max(13, width * 0.026)}px Arial`;
-    context.textAlign = "center";
-    context.fillText("No action selected", width / 2, height / 2);
-    return;
+  if (state.mode === "play") {
+    const info = getPlaybackInfo(state.sequence, currentTime);
+    animMode = info.action ? info.action.id : "sideStep";
+    localTime = info.localTime;
+  } else {
+    animMode = action ? action.id : "sideStep";
+    localTime = currentTime;
   }
 
-  const camera = getCameraSettings(mode);
-  drawModel(context, { action, currentTime, width, height, zoom, camera });
+  updateAnimation(animMode, localTime);
+  renderWebGL(currentTime, state.mode === "play");
 }
 
 function resizeCanvas() {
-  if (!canvas || !context) return;
+  if (!canvas) return;
 
   const rect = canvas.getBoundingClientRect();
   const ratio = window.devicePixelRatio || 1;
 
   canvas.width = Math.max(1, Math.floor(rect.width * ratio));
   canvas.height = Math.max(1, Math.floor(rect.height * ratio));
-
-  context.setTransform(ratio, 0, 0, ratio, 0, 0);
 }
