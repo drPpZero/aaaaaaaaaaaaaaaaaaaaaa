@@ -123,31 +123,33 @@ export function getUpdatedRenderState(mode, t) {
 
 
   } else if (mode === "splitJump") {
-    const duration = 3.0;
+    const duration = 2.0;
     const p = (t % duration) / duration;
     if (p < 0.3) {
       const eased = easeInQuad(p / 0.3);
-      globalJumpHeight = -eased * 0.6;
-      lKneeAngle = rKneeAngle = eased * 50;
+      globalJumpHeight = -eased * 0.4;
+      lKneeAngle = rKneeAngle = eased * 20;
     } else if (p < 0.7) {
       const pJump = (p - 0.3) / 0.4;
       const arc = Math.sin(pJump * Math.PI);
-      globalJumpHeight = -0.6 + arc * 4.0;
+      globalJumpHeight = -0.4 + arc * 3.0;
       const splitPower = Math.pow(arc, 0.5);
       lHipAngle = splitPower * 100;
       rHipAngle = splitPower * -100;
+      torsoTwist = easeInQuad(p / 0.7) * 180;
       lShoulderLift = rShoulderLift = splitPower * 95;
     } else {
       const pLand = (p - 0.7) / 0.3;
       const eased = easeOutQuad(pLand);
+      torsoTwist = -180 + easeInQuad(p / 1) * 180;
       lShoulderLift = rShoulderLift = lerp(95, 30, eased);
     }
 
 
   } else if (mode === "uprightSpin") {
-    const duration = 5.0;
+    const duration = 3.0;
     const p = (t % duration) / duration;
-    const totalRotations = 8; 
+    const totalRotations = 4; 
     globalSpinAngle = ((-Math.cos(p * Math.PI) + 1) / 2) * totalRotations * 360;
     if (p < 0.2) {
       lShoulderLift = rShoulderLift = 80;
@@ -155,22 +157,24 @@ export function getUpdatedRenderState(mode, t) {
       rHipAngle = -60;
       rHipRoll = 30;
       rKneeAngle = 20;
+      lAnkleAngle = 30;
     } else if (p < 0.8) {
       const pIn = (p - 0.2) / 0.6;
       const pull = easeInOutSine(pIn);
       lShoulderLift = rShoulderLift = lerp(80, 5, pull);
       lElbowAngle = rElbowAngle = lerp(0, -120, pull);
       lHipAngle = 5;
-      
       rHipAngle = lerp(-45, 0, pull);
       rHipRoll = lerp(30, 0, pull);
       rKneeAngle = lerp(40, 0, pull);
-      
+      lAnkleAngle = 30;
     } else {
       lShoulderLift = rShoulderLift = lerp(5, 40, (p - 0.8) / 0.2);
+      lElbowAngle = rElbowAngle = lerp(-120, 0, (p - 0.8) / 0.2);
       rHipAngle = 0;
       rHipRoll = 0;
       rKneeAngle = 0;
+      lAnkleAngle = 0;
     }
 
 
@@ -185,13 +189,13 @@ export function getUpdatedRenderState(mode, t) {
       torsoLean = eased * 45;
       lHipAngle = eased * -110; 
       lKneeAngle = eased * 130;
-      rHipAngle = eased * -100;
+      rHipAngle = eased * -130;
       lShoulderSwing = rShoulderSwing = eased * -80;
     } else if (p < 0.75) {
       globalJumpHeight = -2.2; torsoLean = 45;
       lHipAngle = -110; 
       lKneeAngle = 130; 
-      rHipAngle = -100;
+      rHipAngle = -130;
       lShoulderSwing = rShoulderSwing = -80;
     } else {
       const eased = easeInOutSine((p - 0.75) / 0.25);
@@ -199,7 +203,7 @@ export function getUpdatedRenderState(mode, t) {
       torsoLean = 45 * (1 - eased);
       lHipAngle = -110 * (1 - eased); 
       lKneeAngle = 130 * (1 - eased);
-      rHipAngle = -100 * (1 - eased);
+      rHipAngle = -130 * (1 - eased);
       lShoulderSwing = rShoulderSwing = -80 * (1 - eased);
     }
 
@@ -212,6 +216,7 @@ export function getUpdatedRenderState(mode, t) {
     headAngle = eased * -70;
     rHipAngle = eased * -115;
     rKneeAngle = eased * -5;
+    rAnkleAngle = 20;
     lShoulderLift = eased * 90; rShoulderLift = eased * 90;
     lShoulderSwing = eased * -20; rShoulderSwing = eased * -20;
     if (p >= 0.2 && p <= 0.8) {

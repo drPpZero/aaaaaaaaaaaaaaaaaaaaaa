@@ -21,7 +21,7 @@ export const ACTIONS = [
     id: "splitJump",
     name: "스플릿 점프",
     category: "Jump",
-    requiredTime: 3,
+    requiredTime: 2,
     difficulty: "High",
     description: "공중에서 다리를 앞뒤로 크게 벌리는 점프입니다.",
     iconPath: "split"
@@ -30,7 +30,7 @@ export const ACTIONS = [
     id: "uprightSpin",
     name: "업라이트 스핀",
     category: "Spin",
-    requiredTime: 5,
+    requiredTime: 3,
     difficulty: "Medium",
     description: "서서 빠르게 회전하는 동작입니다.",
     iconPath: "upright"

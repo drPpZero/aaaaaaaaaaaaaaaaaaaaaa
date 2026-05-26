@@ -181,8 +181,6 @@ function renderArena(currentTimeSeconds) {
             gl.uniformMatrix4fv(modelViewMatrixLoc, false, window.flatten(modelViewMatrix));
             
             gl.bindBuffer(gl.ARRAY_BUFFER, vColorBuffer);
-            
-            // Force SOLID light blue ice
             const rinkColors = new Float32Array(numRinkVertices * 4);
             for(let j=0; j<numRinkVertices; j++) {
                 rinkColors[j*4] = 0.9; rinkColors[j*4+1] = 0.95;
@@ -191,7 +189,6 @@ function renderArena(currentTimeSeconds) {
             gl.bufferSubData(gl.ARRAY_BUFFER, rinkOffset * 16, rinkColors);
             gl.drawArrays(gl.TRIANGLES, rinkOffset, numRinkVertices);
 
-            // Force distinct horizontal rectangular advertisement boards
             const wallColors = new Float32Array(numWallVertices * 4);
             for(let j=0; j<numWallVertices; j++) {
                 const boardIdx = Math.floor(j / 12);
@@ -271,16 +268,14 @@ function generateArena() {
     numRinkVertices += 6;
 
     wallOffset = points.length;
-    // Horizontal rectangular ad boards (20x4 units)
+    
     const h = 4.0, w = 20.0, wSize = 30;
     for (let z = -wSize; z < wSize; z += w) {
-        // Left
-        points.push(window.vec4(-wSize, y+2, z, 1.0), window.vec4(-wSize, y+6, z, 1.0), window.vec4(-wSize, y+6, z+w, 1.0));
-        points.push(window.vec4(-wSize, y+2, z, 1.0), window.vec4(-wSize, y+6, z+w, 1.0), window.vec4(-wSize, y+2, z+w, 1.0));
+        points.push(window.vec4(-wSize, y, z, 1.0), window.vec4(-wSize, y+6, z, 1.0), window.vec4(-wSize, y+6, z+w, 1.0));
+        points.push(window.vec4(-wSize, y, z, 1.0), window.vec4(-wSize, y+6, z+w, 1.0), window.vec4(-wSize, y, z+w, 1.0));
         numWallVertices += 6;
-        // Right
-        points.push(window.vec4(wSize, y+2, z, 1.0), window.vec4(wSize, y+6, z+w, 1.0), window.vec4(wSize, y+6, z, 1.0));
-        points.push(window.vec4(wSize, y+2, z, 1.0), window.vec4(wSize, y+2, z+w, 1.0), window.vec4(wSize, y+6, z+w, 1.0));
+        points.push(window.vec4(wSize, y, z, 1.0), window.vec4(wSize, y+6, z+w, 1.0), window.vec4(wSize, y+6, z, 1.0));
+        points.push(window.vec4(wSize, y, z, 1.0), window.vec4(wSize, y, z+w, 1.0), window.vec4(wSize, y+6, z+w, 1.0));
         numWallVertices += 6;
     }
 }
