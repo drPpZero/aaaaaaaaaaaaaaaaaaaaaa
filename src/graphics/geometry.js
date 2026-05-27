@@ -71,13 +71,13 @@ export function buildGeometry() {
     offsets.rink.count += 6;
 
     offsets.wall.offset = points.length;
-    const wh = 4.0, ww = 20.0, wSize = 30;
+    const ww = 20.0, wSize = 30;
     for (let z = -wSize; z < wSize; z += ww) {
         points.push(window.vec4(-wSize, ay, z, 1.0), window.vec4(-wSize, ay+6, z, 1.0), window.vec4(-wSize, ay+6, z+ww, 1.0));
         points.push(window.vec4(-wSize, ay, z, 1.0), window.vec4(-wSize, ay+6, z+ww, 1.0), window.vec4(-wSize, ay, z+ww, 1.0));
         offsets.wall.count += 6;
-        points.push(window.vec4(wSize, ay, z, 1.0), window.vec4(wSize, ay+6, z+ww, 1.0), window.vec4(wSize, ay+6, z, 1.0));
-        points.push(window.vec4(wSize, ay, z, 1.0), window.vec4(wSize, ay, z+ww, 1.0), window.vec4(wSize, ay+6, z+ww, 1.0));
+        points.push(window.vec4(-wSize, ay+6, z, 1.0), window.vec4(-10-wSize, ay+6, z, 1.0), window.vec4(-10-wSize, ay+6, z+ww, 1.0));
+        points.push(window.vec4(-wSize, ay+6, z, 1.0), window.vec4(-10-wSize, ay+6, z+ww, 1.0), window.vec4(-wSize, ay+6, z+ww, 1.0));
         offsets.wall.count += 6;
     }
 
