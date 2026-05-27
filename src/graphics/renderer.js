@@ -1,10 +1,9 @@
-import { initWebGL, renderWebGL, updateAnimation } from "./webgl-engine.js";
+import { initWebGL, renderWebGL, updateAnimation, adjustZoom, resetZoom } from "./webgl-engine.js";
 import { state } from "../state.js";
 import { getActionById, getPlaybackInfo } from "../actions.js";
 
 let canvas = null;
 let mode = "edit";
-
 let handleResize = null;
 
 export function createViewer(container, nextMode) {
@@ -17,6 +16,7 @@ export function createViewer(container, nextMode) {
   container.appendChild(canvas);
 
   resizeCanvas();
+  resetZoom();
   initWebGL(canvas);
 
   if (handleResize) {
@@ -32,7 +32,7 @@ export function createViewer(container, nextMode) {
 }
 
 export function setZoom(direction) {
-  // WebGL zoom could be implemented by modifying camera eye or projection
+  adjustZoom(direction * 0.1);
 }
 
 export function renderCurrentFrame(action, currentTime = 0) {

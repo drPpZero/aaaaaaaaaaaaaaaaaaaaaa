@@ -52,11 +52,11 @@ export function renderEditScreen(root) {
 
   root.querySelector("#playButton").addEventListener("click", tryEnterPlayMode);
   root.querySelector("#zoomInButton").addEventListener("click", () => {
-    setZoom(1);
+    setZoom(-1);
     renderCurrentFrame(selectedAction, 0);
   });
   root.querySelector("#zoomOutButton").addEventListener("click", () => {
-    setZoom(-1);
+    setZoom(1);
     renderCurrentFrame(selectedAction, 0);
   });
 }

@@ -9,6 +9,8 @@ let modelViewMatrixLoc;
 let points = [];
 let vPositionBuffer, vColorBuffer;
 
+export let zoomLevel = 1.0;
+
 let geoOffsets;
 
 let jointColor, armorColorDark, armorColorLight, bladeColor, gridColor;
@@ -18,6 +20,14 @@ let modelViewMatrix;
 const matrixStack = [];
 let renderState = {};
 let currentAnim = "sideStep";
+
+export function adjustZoom(delta) {
+  zoomLevel = Math.max(0.5, Math.min(2.0, zoomLevel + delta));
+}
+
+export function resetZoom() {
+  zoomLevel = 1.0;
+}
 
 function pushMatrix() {
     const copy = window.mat4();
@@ -113,7 +123,8 @@ export function renderWebGL(currentTimeSeconds, isPlayMode = false) {
   if (!gl) return;
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-  const eye = window.vec3(15.588, 3.0, 9.0); 
+  const baseX = 15.588, baseY = 3.0, baseZ = 9.0;   
+  const eye = window.vec3(baseX * zoomLevel, baseY * zoomLevel, baseZ * zoomLevel);
   const at = window.vec3(0.0, 0.0, 0.0);
   const up = window.vec3(0.0, 1.0, 0.0);
   modelViewMatrix = window.lookAt(eye, at, up);
