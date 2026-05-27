@@ -4,7 +4,7 @@
 
 export function renderCharacter(renderState, utils) {
   const { pushMatrix, popMatrix, applyTransform, drawCylinder, drawSphere, drawCube, colors } = utils;
-  const { armorColorDark, armorColorLight, jointColor } = colors;
+  const { armorColorDark, jointColor } = colors;
 
   pushMatrix();
     //root
@@ -21,7 +21,7 @@ export function renderCharacter(renderState, utils) {
     // 목, 머리
     pushMatrix();
       applyTransform(window.translate(0.0, 1.1, 0.0)); 
-      drawCylinder(0.3, 0.3, 0.3, armorColorLight);
+      drawCylinder(0.3, 0.3, 0.3, armorColorDark);
       applyTransform(window.translate(0.0, 0.2, 0.0)); 
       applyTransform(window.rotateX(renderState.head)); 
       applyTransform(window.translate(0.0, 0.6, 0.0)); 
@@ -68,7 +68,7 @@ export function renderCharacter(renderState, utils) {
       
       pushMatrix();
         applyTransform(window.translate(0.0, -0.6, 0.0)); 
-        drawCylinder(0.4, 1.2, 0.4, armorColorLight); 
+        drawCylinder(0.4, 1.2, 0.4, armorColorDark); 
       popMatrix();
       
       pushMatrix();
@@ -116,11 +116,11 @@ export function renderCharacter(renderState, utils) {
 
           pushMatrix();
             applyTransform(window.translate(0.0, 0.0, -0.05));
-            drawCylinder(0.35, 0.4, 0.35, armorColorLight);
+            drawCylinder(0.35, 0.4, 0.35, armorColorDark);
           popMatrix();
           pushMatrix();
             applyTransform(window.translate(0.0, -0.15, 0.15));
-            drawCube(0.35, 0.3, 0.6, armorColorLight); 
+            drawCube(0.35, 0.3, 0.6, armorColorDark); 
           popMatrix();
           pushMatrix();
             applyTransform(window.translate(0.0, -0.35, 0.3));
@@ -167,12 +167,12 @@ export function renderCharacter(renderState, utils) {
 
           pushMatrix();
             applyTransform(window.translate(0.0, 0.0, -0.05));
-            drawCylinder(0.35, 0.4, 0.35, armorColorLight);
+            drawCylinder(0.35, 0.4, 0.35, armorColorDark);
           popMatrix();
 
           pushMatrix();
             applyTransform(window.translate(0.0, -0.15, 0.15));
-            drawCube(0.35, 0.3, 0.6, armorColorLight); 
+            drawCube(0.35, 0.3, 0.6, armorColorDark); 
           popMatrix();
 
           pushMatrix();
@@ -193,4 +193,62 @@ export function renderCharacter(renderState, utils) {
     popMatrix();
     
   popMatrix(); 
+}
+
+export function renderAudience(audState, utils, color) {
+  const { xPos, standHeight, bounce, z } = audState;
+  const { pushMatrix, popMatrix, applyTransform, drawCylinder, drawSphere, drawCube, colors } = utils;
+  const jColor = window.vec4(0.9, 0.7, 0.6, 1.0);
+  pushMatrix();
+    applyTransform(window.translate(xPos, standHeight + bounce, z));
+    drawCylinder(1, 6, 4, color);
+    pushMatrix();
+        applyTransform(window.translate(0.0, 5.5, 0.0));
+        drawSphere(3, 3, 3, jColor);
+    popMatrix();
+    pushMatrix();
+        applyTransform(window.translate(0, 3, -2));
+        drawSphere(1, 1, 1, jColor);
+        applyTransform(window.rotateZ(audState.lShoulder));
+        pushMatrix();
+            applyTransform(window.translate(0, -1,2, 0));
+            drawCylinder(1, 2.4, 1, color);
+        popMatrix(); 
+        pushMatrix();
+            applyTransform(window.translate(0.0, -2.4, 0.0));
+            drawSphere(1, 1, 1, jColor);
+            applyTransform(window.rotateZ(audState.lElbow));
+            pushMatrix();
+                applyTransform(window.translate(0.0, -0.8, 0.0));
+                drawCylinder(1, 1.6, 1, color);
+            popMatrix();
+            pushMatrix();
+                applyTransform(window.translate(0.0, -1.6, 0.0));
+                drawSphere(1, 1, 1, jColor);
+            popMatrix();
+        popMatrix();   
+    popMatrix();
+    pushMatrix();
+        applyTransform(window.translate(0, 3, 2));
+        drawSphere(1, 1, 1, jColor);
+        applyTransform(window.rotateZ(audState.rShoulder));
+        pushMatrix();
+            applyTransform(window.translate(0, -1.2, 0));
+            drawCylinder(1, 2.4, 1, color);
+        popMatrix(); 
+        pushMatrix();
+            applyTransform(window.translate(0.0, -2.4, 0.0));
+            drawSphere(1, 1, 1, jColor);
+            applyTransform(window.rotateZ(audState.rElbow));
+            pushMatrix();
+                applyTransform(window.translate(0.0, -0.8, 0.0));
+                drawCylinder(1, 1.6, 1, color);
+            popMatrix();
+            pushMatrix();
+                applyTransform(window.translate(0.0, -1.6, 0.0));
+                drawSphere(1, 1, 1, jColor);
+            popMatrix();
+        popMatrix();   
+    popMatrix();     
+  popMatrix();
 }
