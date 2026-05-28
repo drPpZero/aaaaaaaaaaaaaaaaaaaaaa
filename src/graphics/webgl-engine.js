@@ -69,13 +69,9 @@ export function initWebGL(canvas) {
 
   jointColor = window.vec4(0.85, 0.7, 0.2, 1.0);  
   armorColorDark = window.vec4(0.1, 0.1, 0.1, 1.0); 
-  armorColorLight = window.vec4(0.5, 0.5, 0.5, 1.0); 
-  bladeColor = window.vec4(0.7, 0.7, 0.7, 1.0);  
+  armorColorLight = window.vec4(0.5, 0.5, 0.5, 1.0);
   gridColor = window.vec4(0.6, 0.8, 1.0, 1.0);   
   
-  iceColor = window.vec4(0.9, 0.95, 1.0, 1.0);
-  iceMarkColor = window.vec4(0.7, 0.8, 0.9, 1.0);
-  wallBaseColor = window.vec4(0.2, 0.2, 0.3, 1.0);
   adColor1 = window.vec4(1.0, 0.2, 0.2, 1.0); 
   adColor2 = window.vec4(0.2, 0.4, 1.0, 1.0); 
 
@@ -211,13 +207,16 @@ function renderAudiences(currentTimeSeconds) {
     const audState = {};
     for (let row = 0; row < 2; row++) {
         const xPos = -(wSize + 10 + (row * 5));
-        for (let z = -wSize; z < wSize; z += 10) {
-            const color = colors[Math.abs(z)%colors.length];
+        for (let z = -wSize; z < wSize; z = z + 15 + row * 5) {
+            const color = colors[Math.abs(z)%colors.length + row];
             const speed = (currentAnim === "uprightSpin" || currentAnim === "sitSpin") ? 0 : 6.0;
             const anim = ((Math.abs(z) * 3 + row) % 2) === 0 ? "clap" : "jump";
             let bounce = 0;
-            if(anim == "jump") bounce = Math.abs(Math.sin(currentTimeSeconds * speed + (Math.abs(z)*3 + row * 7) % 5)) * 0.8;
-            let lShoulder = 0.0; lElbow = 0.0; rShoulder = 0.0; rElbow = 0.0;
+            if(anim == "jump") {
+                bounce = Math.abs(Math.sin(currentTimeSeconds * speed + (Math.abs(z)*3 + row * 7) % 5)) * 0.8;
+            }
+            let lShoulder = 0.0; 
+            let lElbow = 0.0; let rShoulder = 0.0; let rElbow = 0.0;
             if(anim == "clap") {
                 lShoulder = Math.sin(currentTimeSeconds * speed + (Math.abs(z)*3 + row * 7)) * 60 + 30;
                 rShoulder = Math.sin(currentTimeSeconds * speed + (Math.abs(z)*3 + row * 7) + Math.PI) * 60 + 30;

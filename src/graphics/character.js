@@ -206,18 +206,19 @@ export function renderAudience(audState, utils, color) {
         applyTransform(window.translate(0.0, 5.5, 0.0));
         drawSphere(3, 3, 3, jColor);
     popMatrix();
+
     pushMatrix();
         applyTransform(window.translate(0, 3, -2));
         drawSphere(1, 1, 1, jColor);
-        applyTransform(window.rotateZ(audState.lShoulder));
+        applyTransform(window.rotateX(audState.lShoulder));
         pushMatrix();
-            applyTransform(window.translate(0, -1,2, 0));
+            applyTransform(window.translate(0, -1.2, 0));
             drawCylinder(1, 2.4, 1, color);
         popMatrix(); 
         pushMatrix();
             applyTransform(window.translate(0.0, -2.4, 0.0));
             drawSphere(1, 1, 1, jColor);
-            applyTransform(window.rotateZ(audState.lElbow));
+            applyTransform(window.rotateX(audState.lElbow));
             pushMatrix();
                 applyTransform(window.translate(0.0, -0.8, 0.0));
                 drawCylinder(1, 1.6, 1, color);
@@ -228,10 +229,11 @@ export function renderAudience(audState, utils, color) {
             popMatrix();
         popMatrix();   
     popMatrix();
+
     pushMatrix();
         applyTransform(window.translate(0, 3, 2));
         drawSphere(1, 1, 1, jColor);
-        applyTransform(window.rotateZ(audState.rShoulder));
+        applyTransform(window.rotateX(audState.rShoulder));
         pushMatrix();
             applyTransform(window.translate(0, -1.2, 0));
             drawCylinder(1, 2.4, 1, color);
@@ -239,7 +241,7 @@ export function renderAudience(audState, utils, color) {
         pushMatrix();
             applyTransform(window.translate(0.0, -2.4, 0.0));
             drawSphere(1, 1, 1, jColor);
-            applyTransform(window.rotateZ(audState.rElbow));
+            applyTransform(window.rotateX(audState.rElbow));
             pushMatrix();
                 applyTransform(window.translate(0.0, -0.8, 0.0));
                 drawCylinder(1, 1.6, 1, color);
