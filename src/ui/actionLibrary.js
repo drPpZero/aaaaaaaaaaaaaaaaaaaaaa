@@ -30,6 +30,11 @@ export function renderActionLibrary(container) {
       <div class="card-time">${action.requiredTime}s</div>
     `;
 
+    card.draggable = true;
+    card.addEventListener("dragstart", (e) => {
+      try { e.dataTransfer.setData("text/actionId", action.id); } catch (err) { e.dataTransfer.setData("text/plain", action.id); }
+    });
+
     card.addEventListener("click", () => selectAction(action.id));
     grid.appendChild(card);
   });

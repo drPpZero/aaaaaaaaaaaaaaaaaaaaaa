@@ -1,5 +1,5 @@
 import { getActionById, getTotalTime } from "../actions.js";
-import { state, deleteSequenceItem } from "../state.js";
+import { state, deleteSequenceItem, insertActionAt } from "../state.js";
 import { createPoseSvg } from "./actionLibrary.js";
 
 export function renderSequenceBar(container, options = {}) {
@@ -24,6 +24,29 @@ export function renderSequenceBar(container, options = {}) {
 
   const row = document.createElement("div");
   row.className = "sequence-row";
+
+  row.addEventListener("dragover", (e) => {
+    e.preventDefault();
+  });
+
+  row.addEventListener("drop", (e) => {
+    e.preventDefault();
+    let actionId = null;
+    try { actionId = e.dataTransfer.getData("text/actionId"); } catch (err) { actionId = e.dataTransfer.getData("text/plain"); }
+    if (!actionId) return;
+
+    const targetCard = e.target.closest('.sequence-card');
+    let insertIndex = state.sequence.length;
+    if (targetCard) {
+      const numEl = targetCard.querySelector('.sequence-number');
+      if (numEl) {
+        const idx = parseInt(numEl.textContent, 10);
+        if (!Number.isNaN(idx)) insertIndex = idx - 1;
+      }
+    }
+
+    insertActionAt(actionId, insertIndex);
+  });
 
   if (state.sequence.length === 0) {
     const empty = document.createElement("div");

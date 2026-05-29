@@ -1,4 +1,4 @@
-import { renderCharacter } from "./character.js";
+import { renderCharacter, renderAudience } from "./character.js";
 import { getUpdatedRenderState } from "./animation.js";
 import { buildGeometry } from "./geometry.js";
 
@@ -8,13 +8,14 @@ let modelViewMatrixLoc;
 
 let points = [];
 let vPositionBuffer, vColorBuffer;
+const colors = [];
 
 export let zoomLevel = 1.0;
 
 let geoOffsets;
 
-let jointColor, armorColorDark, armorColorLight, bladeColor, gridColor;
-let iceColor, iceMarkColor, wallBaseColor, adColor1, adColor2;
+let jointColor, armorColorDark, armorColorLight, gridColor;
+let adColor1, adColor2;
 
 let modelViewMatrix;
 const matrixStack = [];
@@ -68,13 +69,9 @@ export function initWebGL(canvas) {
 
   jointColor = window.vec4(0.85, 0.7, 0.2, 1.0);  
   armorColorDark = window.vec4(0.1, 0.1, 0.1, 1.0); 
-  armorColorLight = window.vec4(0.5, 0.5, 0.5, 1.0); 
-  bladeColor = window.vec4(0.7, 0.7, 0.7, 1.0);  
+  armorColorLight = window.vec4(0.5, 0.5, 0.5, 1.0);
   gridColor = window.vec4(0.6, 0.8, 1.0, 1.0);   
   
-  iceColor = window.vec4(0.9, 0.95, 1.0, 1.0);
-  iceMarkColor = window.vec4(0.7, 0.8, 0.9, 1.0);
-  wallBaseColor = window.vec4(0.2, 0.2, 0.3, 1.0);
   adColor1 = window.vec4(1.0, 0.2, 0.2, 1.0); 
   adColor2 = window.vec4(0.2, 0.4, 1.0, 1.0); 
 
@@ -82,7 +79,7 @@ export function initWebGL(canvas) {
   const geometryData = buildGeometry();
   points = geometryData.points;
   geoOffsets = geometryData.offsets;
-
+  generateAudienceColors();
   gl.viewport(0, 0, canvas.width, canvas.height);
   gl.clearColor(0.8, 0.85, 0.95, 1.0); 
   gl.enable(gl.DEPTH_TEST);
@@ -192,6 +189,54 @@ function renderArena(currentTimeSeconds) {
             }
             gl.bufferSubData(gl.ARRAY_BUFFER, geoOffsets.wall.offset * 16, wallColors);
             gl.drawArrays(gl.TRIANGLES, geoOffsets.wall.offset, geoOffsets.wall.count);
+            renderAudiences(currentTimeSeconds);
         popMatrix();
+    }
+}
+
+function generateAudienceColors() {
+    for (let i = 0; i < 100; i++) {
+        colors.push(window.vec4(Math.random(), Math.random(), Math.random(), 1.0));
+    }
+}
+
+function renderAudiences(currentTimeSeconds) {
+    const wSize = 30;
+    const ay = -5.85;
+    const standHeight = ay + 6.8;
+    const audState = {};
+    for (let row = 0; row < 2; row++) {
+        const xPos = -(wSize + 10 + (row * 5));
+        for (let z = -wSize; z < wSize; z = z + 15 + row * 5) {
+            const color = colors[Math.abs(z)%colors.length + row];
+            const speed = 6.0;
+            const anim = ((Math.abs(z) * 3 + row) % 2) === 0 ? "clap" : "jump";
+            let bounce = 0;
+            let lShoulder = 0.0; 
+            let lElbow = 0.0; 
+            let rShoulder = 0.0; 
+            let rElbow = 0.0;
+            if(anim == "jump") {
+                bounce = Math.abs(Math.sin(currentTimeSeconds * speed + (Math.abs(z)*3 + row * 7) % 5)) * 0.8;
+                lShoulder = 120; 
+                rShoulder = -120;
+            }
+            if(anim == "clap") {
+                lShoulder = Math.abs(Math.sin(currentTimeSeconds * speed)) * 90 + 90;
+                rShoulder = -Math.abs(Math.sin(currentTimeSeconds * speed)) * 90 - 90;
+            }
+            audState.xPos = xPos;
+            audState.standHeight = standHeight;
+            audState.bounce = bounce;
+            audState.z = z;
+            audState.lShoulder = lShoulder;
+            audState.rShoulder = rShoulder;
+            audState.lElbow = lElbow;
+            audState.rElbow = rElbow;
+
+            renderAudience(audState, {
+                pushMatrix, popMatrix, applyTransform, drawCylinder, drawSphere, drawCube },
+                color);
+        }
     }
 }
