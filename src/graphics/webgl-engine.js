@@ -212,14 +212,18 @@ function renderAudiences(currentTimeSeconds) {
             const speed = (currentAnim === "uprightSpin" || currentAnim === "sitSpin") ? 0 : 6.0;
             const anim = ((Math.abs(z) * 3 + row) % 2) === 0 ? "clap" : "jump";
             let bounce = 0;
+            let lShoulder = 0.0; 
+            let lElbow = 0.0; 
+            let rShoulder = 0.0; 
+            let rElbow = 0.0;
             if(anim == "jump") {
                 bounce = Math.abs(Math.sin(currentTimeSeconds * speed + (Math.abs(z)*3 + row * 7) % 5)) * 0.8;
+                lShoulder = 120; 
+                rShoulder = -120;
             }
-            let lShoulder = 0.0; 
-            let lElbow = 0.0; let rShoulder = 0.0; let rElbow = 0.0;
             if(anim == "clap") {
-                lShoulder = Math.sin(currentTimeSeconds * speed + (Math.abs(z)*3 + row * 7)) * 60 + 30;
-                rShoulder = Math.sin(currentTimeSeconds * speed + (Math.abs(z)*3 + row * 7) + Math.PI) * 60 + 30;
+                lShoulder = Math.abs(Math.sin(currentTimeSeconds * speed)) * 90 + 90;
+                rShoulder = -Math.abs(Math.sin(currentTimeSeconds * speed)) * 90 - 90;
             }
             audState.xPos = xPos;
             audState.standHeight = standHeight;
