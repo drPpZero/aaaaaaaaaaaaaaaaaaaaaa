@@ -70,6 +70,7 @@ export function renderSequenceBar(container, options = {}) {
     totalRow.innerHTML = `
       <span>Total Time</span>
       <span class="total-time">${getTotalTime(state.sequence)}s</span>
+      <span>It takes three seconds between movements.</span>
     `;
     container.appendChild(totalRow);
   }
