@@ -48,6 +48,20 @@ export function appendSelectedAction() {
   notify();
 }
 
+export function insertActionAt(actionId, index) {
+  if (!actionId) return;
+  if (state.sequence.length >= state.maxSequenceLength) {
+    state.errorMessage = "You can append up to 20 actions.";
+    notify();
+    return;
+  }
+
+  const safeIndex = Math.max(0, Math.min(index, state.sequence.length));
+  state.sequence.splice(safeIndex, 0, { instanceId: makeInstanceId(), actionId });
+  state.errorMessage = "";
+  notify();
+}
+
 export function deleteSequenceItem(instanceId) {
   state.sequence = state.sequence.filter((item) => item.instanceId !== instanceId);
 
@@ -77,7 +91,6 @@ export function tryEnterPlayMode() {
 }
 
 export function enterEditMode() {
-  // Sequence is preserved. This works even while the model is playing.
   state.mode = "edit";
   state.isPlaying = false;
   state.currentTime = 0;
@@ -92,7 +105,6 @@ export function togglePlayPause() {
 }
 
 export function resetPlayback() {
-  // Reset works even while the model is playing.
   state.currentTime = 0;
   state.currentActionIndex = getCurrentActionIndex(state.sequence, 0);
   state.isPlaying = true;

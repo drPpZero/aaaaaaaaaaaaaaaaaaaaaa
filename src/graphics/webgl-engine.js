@@ -209,7 +209,7 @@ function renderAudiences(currentTimeSeconds) {
         const xPos = -(wSize + 10 + (row * 5));
         for (let z = -wSize; z < wSize; z = z + 15 + row * 5) {
             const color = colors[Math.abs(z)%colors.length + row];
-            const speed = (currentAnim === "uprightSpin" || currentAnim === "sitSpin") ? 0 : 6.0;
+            const speed = 6.0;
             const anim = ((Math.abs(z) * 3 + row) % 2) === 0 ? "clap" : "jump";
             let bounce = 0;
             let lShoulder = 0.0; 
