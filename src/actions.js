@@ -1,56 +1,56 @@
 export const ACTIONS = [
   {
     id: "sideStep",
-    name: "사이드 스텝",
+    name: "Side Step",
     category: "Step / Spiral",
     requiredTime: 4,
     difficulty: "Low",
-    description: "기본적인 사이드 스텝 동작입니다.",
+    description: "Basic side step motion",
     iconPath: "side"
   },
   {
     id: "toeLoop",
-    name: "룹 점프",
+    name: "Loop Jump",
     category: "Jump",
     requiredTime: 1.5,
     difficulty: "Medium",
-    description: "기본적인 회전 점프 동작입니다.",
+    description: "Basic rotational jump motion",
     iconPath: "loop"
   },
   {
     id: "splitJump",
-    name: "스플릿 점프",
+    name: "Split Jump",
     category: "Jump",
     requiredTime: 2,
     difficulty: "High",
-    description: "공중에서 다리를 앞뒤로 크게 벌리는 점프입니다.",
+    description: "Jump with one's legs wide open back and forth in the air",
     iconPath: "split"
   },
   {
     id: "uprightSpin",
-    name: "업라이트 스핀",
+    name: "Upright Spin",
     category: "Spin",
     requiredTime: 3,
     difficulty: "Medium",
-    description: "서서 빠르게 회전하는 동작입니다.",
+    description: "Spin that rotates quickly while standing",
     iconPath: "upright"
   },
   {
     id: "sitSpin",
-    name: "싯 스핀",
+    name: "Sit Spine",
     category: "Spin",
     requiredTime: 5,
     difficulty: "High",
-    description: "낮은 자세로 앉아서 회전하는 동작입니다.",
+    description: "Spin that rotates while sitting in a low position",
     iconPath: "sit"
   },
   {
     id: "spiral",
-    name: "스파이럴",
+    name: "Spiral",
     category: "Step / Spiral",
     requiredTime: 5,
     difficulty: "Medium",
-    description: "한쪽 다리를 뒤로 높게 들고 활주하는 동작입니다.",
+    description: "Movement in which one leg is held high back and slides.",
     iconPath: "spiral"
   }
 ];
