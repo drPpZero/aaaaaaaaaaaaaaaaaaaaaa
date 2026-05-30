@@ -230,16 +230,13 @@ button {
 }
 
 .action-card {
-  width: 86px;
-  height: 82px;
-  padding: 4px;
-  border: 1.3px solid transparent;
-  border-radius: 8px;
-  background: var(--bg);
+  min-height: 120px;
+  padding: 10px 8px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
 .action-card.selected {
@@ -248,10 +245,11 @@ button {
 }
 
 .pose-icon {
-  width: 50px;
-  height: 50px;
-  color: var(--navy);
-  flex: 0 0 auto;
+  width: 62px;
+  height: 62px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto 8px;
 }
 
 .card-name {
@@ -313,19 +311,33 @@ button {
 }
 
 .info-main {
-  display: grid;
-  grid-template-columns: 82px 1fr;
-  gap: 15px;
+  display: flex;
   align-items: center;
+  gap: 18px;
+}
+
+.info-main > div:last-child {
+  min-width: 0;
+  flex: 1;
 }
 
 .info-icon-circle {
-  width: 82px;
-  height: 82px;
-  border: 1px solid var(--panel);
+  width: 105px;
+  height: 105px;
   border-radius: 50%;
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #f8fafc;
+}
+
+.info-icon-img {
+  width: 78px;
+  height: 78px;
+  object-fit: contain;
+  display: block;
 }
 
 .info-icon-circle .pose-icon {
@@ -334,22 +346,21 @@ button {
 }
 
 .info-name {
-  margin: 0 0 5px;
-  font-size: 18px;
-  font-weight: 900;
+  font-size: 22px;
+  line-height: 1.2;
+  margin: 0 0 6px;
 }
 
 .info-description {
-  width: 145px;
+  font-size: 13px;
+  line-height: 1.25;
   margin: 0 0 6px;
-  font-size: 9px;
-  line-height: 1.1;
+  word-break: keep-all;
 }
 
 .required-time {
-  color: var(--navy);
-  font-size: 8px;
-  font-weight: 900;
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .info-meta {
@@ -420,6 +431,14 @@ button {
   height: 93px;
   overflow-x: auto;
   overflow-y: hidden;
+}
+
+.sequence-icon-img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto 6px;
 }
 
 .sequence-row {
@@ -520,6 +539,13 @@ button {
 
 .total-time {
   color: var(--blue);
+}
+
+.total-note {
+  font-size: 14px;
+  color: #7f8a94;
+  font-weight: 400;
+  letter-spacing: 0;
 }
 
 /* ---------------- Play Mode ---------------- */

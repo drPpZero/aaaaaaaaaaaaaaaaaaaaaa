@@ -1,6 +1,5 @@
 import { getActionById, getTotalTime } from "../actions.js";
 import { state, deleteSequenceItem, insertActionAt } from "../state.js";
-import { createPoseSvg } from "./actionLibrary.js";
 
 export function renderSequenceBar(container, options = {}) {
   const {
@@ -31,14 +30,22 @@ export function renderSequenceBar(container, options = {}) {
 
   row.addEventListener("drop", (e) => {
     e.preventDefault();
+
     let actionId = null;
-    try { actionId = e.dataTransfer.getData("text/actionId"); } catch (err) { actionId = e.dataTransfer.getData("text/plain"); }
+
+    try {
+      actionId = e.dataTransfer.getData("text/actionId");
+    } catch (err) {
+      actionId = e.dataTransfer.getData("text/plain");
+    }
+
     if (!actionId) return;
 
-    const targetCard = e.target.closest('.sequence-card');
+    const targetCard = e.target.closest(".sequence-card");
     let insertIndex = state.sequence.length;
+
     if (targetCard) {
-      const numEl = targetCard.querySelector('.sequence-number');
+      const numEl = targetCard.querySelector(".sequence-number");
       if (numEl) {
         const idx = parseInt(numEl.textContent, 10);
         if (!Number.isNaN(idx)) insertIndex = idx - 1;
@@ -66,7 +73,7 @@ export function renderSequenceBar(container, options = {}) {
 
       card.innerHTML = `
         <div class="sequence-number">${index + 1}</div>
-        ${createPoseSvg(action.iconPath)}
+        <img class="sequence-icon-img" src="${action.imgPath}" alt="${action.name}" />
         <div class="card-name">${action.name}</div>
         <div class="card-time">${action.requiredTime}s</div>
       `;
@@ -76,7 +83,9 @@ export function renderSequenceBar(container, options = {}) {
         deleteButton.className = "delete-button";
         deleteButton.type = "button";
         deleteButton.textContent = "×";
-        deleteButton.addEventListener("click", () => deleteSequenceItem(sequenceItem.instanceId));
+        deleteButton.addEventListener("click", () => {
+          deleteSequenceItem(sequenceItem.instanceId);
+        });
         card.appendChild(deleteButton);
       }
 
@@ -92,8 +101,8 @@ export function renderSequenceBar(container, options = {}) {
     totalRow.className = "total-row";
     totalRow.innerHTML = `
       <span>Total Time</span>
-      <span class="total-time">${getTotalTime(state.sequence)}s</span>
-      <span>It takes three seconds between movements.</span>
+      <span class="total-time">${getTotalTime(state.sequence).toFixed(1)}s</span>
+      <span class="total-note">It takes three seconds between movements.</span>
     `;
     container.appendChild(totalRow);
   }
