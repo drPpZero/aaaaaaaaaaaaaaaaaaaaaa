@@ -208,7 +208,7 @@ function renderAudiences(currentTimeSeconds) {
     for (let row = 0; row < 2; row++) {
         const xPos = -(wSize + 10 + (row * 5));
         for (let z = -wSize; z < wSize; z = z + 15 + row * 5) {
-            const color = colors[Math.abs(z)%colors.length + row];
+            const color = colors[(Math.abs(z) + row * 41)%colors.length ];
             const speed = 6.0;
             const anim = ((Math.abs(z) * 3 + row) % 2) === 0 ? "clap" : "jump";
             let bounce = 0;

@@ -193,11 +193,17 @@ button {
 }
 
 .action-library-panel {
+  -ms-overflow-style: none;
   left: 697px;
   top: 80px;
   width: 300px;
   height: 281px;
   padding: 18px 14px 12px;
+  overflow-y: auto;
+}
+
+.action-library-panel::-webkit-scrollbar{
+  display:none;
 }
 
 .section-heading {
@@ -347,14 +353,14 @@ button {
 
 .info-name {
   font-size: 22px;
-  line-height: 1.2;
-  margin: 0 0 6px;
+  line-height: 1;
+  margin: 0 0 3px;
 }
 
 .info-description {
   font-size: 13px;
-  line-height: 1.25;
-  margin: 0 0 6px;
+  line-height: 1;
+  margin: 0 0 3px;
   word-break: keep-all;
 }
 
