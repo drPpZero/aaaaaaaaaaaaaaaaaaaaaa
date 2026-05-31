@@ -102,7 +102,7 @@ export function renderSequenceBar(container, options = {}) {
     totalRow.innerHTML = `
       <span>Total Time</span>
       <span class="total-time">${getTotalTime(state.sequence).toFixed(1)}s</span>
-      <span class="total-note">It takes three seconds between movements.</span>
+      <span class="total-note">Transitions usually take three seconds, except after jump actions.</span>
     `;
     container.appendChild(totalRow);
   }
