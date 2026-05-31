@@ -1,3 +1,16 @@
+/*
+SVG 아이콘 생성 유틸 파일
+
+초기 버전에서는 로컬 이미지 파일을 사용하지 않고,
+JavaScript에서 SVG 요소를 직접 생성하여 동작 아이콘을 표시함.
+
+현재 버전에서는 img 디렉토리에 저장된 로컬 이미지 파일을 사용하므로,
+이 파일은 기본적으로 사용하지 않음
+
+다시 SVG 기반 아이콘을 사용해야 할 경우,
+createPoseIcon(type, size) 함수를 import하여 사용 가능.
+*/
+
 export function createPoseIcon(type, size = 80) {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg.setAttribute("viewBox", "0 0 100 100");

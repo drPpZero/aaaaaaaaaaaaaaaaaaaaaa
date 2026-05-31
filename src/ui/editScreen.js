@@ -5,6 +5,9 @@ import { renderActionInfo } from "./actionInfo.js";
 import { renderSequenceBar } from "./sequenceBar.js";
 import { createViewer, renderCurrentFrame, setZoom } from "../graphics/renderer.js";
 
+/*
+Edit Mode 화면
+*/
 export function renderEditScreen(root) {
   const selectedAction = getActionById(state.selectedActionId);
 

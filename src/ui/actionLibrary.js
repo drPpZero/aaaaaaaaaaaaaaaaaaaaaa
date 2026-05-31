@@ -57,6 +57,10 @@ export function renderActionLibrary(container) {
   });
 }
 
+/*
+icon svg를 생성하는 함수
+로컬 이미지 없이 icon을 사용할 경우, 주석 해제 후 사용
+*/
 // export function createPoseSvg(type) {
 //   const stroke = `stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"`;
 //   const head = (x = 50, y = 16) => `<circle cx="${x}" cy="${y}" r="6" fill="currentColor" />`;

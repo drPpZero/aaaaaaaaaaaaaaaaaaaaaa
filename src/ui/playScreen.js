@@ -4,6 +4,10 @@ import { renderTimeBar } from "./timeBar.js";
 import { createViewer, renderCurrentFrame } from "../graphics/renderer.js";
 import { getActionById } from "../actions.js";
 
+/*
+Play 화면
+Edit Mode 화면에서 Play 버튼을 누른 뒤, 이동되는 화면
+*/
 export function renderPlayScreen(root) {
   root.innerHTML = `
     <div class="screen-wrap">

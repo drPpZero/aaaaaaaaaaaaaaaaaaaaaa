@@ -1,6 +1,9 @@
 import { getActionById } from "../actions.js";
 import { state, appendSelectedAction } from "../state.js";
 
+/*
+Action Information
+*/
 export function renderActionInfo(container) {
   const selectedAction = getActionById(state.selectedActionId);
 
@@ -43,6 +46,5 @@ export function renderActionInfo(container) {
   `;
 
   const appendButton = container.querySelector("#appendButton");
-  appendButton.disabled = state.sequence.length >= state.maxSequenceLength;
   appendButton.addEventListener("click", appendSelectedAction);
 }
