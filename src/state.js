@@ -33,6 +33,7 @@ export function selectAction(actionId) {
 export function appendSelectedAction() {
   if (!state.selectedActionId) return;
 
+  // 최대 개수에 도달하면 더 이상 추가하지 않음
   if (state.sequence.length >= state.maxSequenceLength) {
     state.errorMessage = "You can append up to 20 actions.";
     notify();
@@ -50,14 +51,14 @@ export function appendSelectedAction() {
 
 export function insertActionAt(actionId, index) {
   if (!actionId) return;
-  if (state.sequence.length >= state.maxSequenceLength) {
-    state.errorMessage = "You can append up to 20 actions.";
-    notify();
-    return;
-  }
 
   const safeIndex = Math.max(0, Math.min(index, state.sequence.length));
-  state.sequence.splice(safeIndex, 0, { instanceId: makeInstanceId(), actionId });
+
+  state.sequence.splice(safeIndex, 0, {
+    instanceId: makeInstanceId(),
+    actionId,
+  });
+
   state.errorMessage = "";
   notify();
 }
@@ -66,26 +67,31 @@ export function deleteSequenceItem(instanceId) {
   state.sequence = state.sequence.filter((item) => item.instanceId !== instanceId);
 
   const totalTime = getTotalTime(state.sequence);
+
   if (state.currentTime > totalTime) {
     state.currentTime = totalTime;
   }
 
   state.currentActionIndex = getCurrentActionIndex(state.sequence, state.currentTime);
+  state.errorMessage = "";
   notify();
 }
 
 export function tryEnterPlayMode() {
+  // sequence가 비어 있을 때만 play 진입을 막음
   if (state.sequence.length === 0) {
-    state.errorMessage = "There isn't any action. Please append one of action";
+    state.errorMessage = "There isn't any action. Please append one action.";
     notify();
     return false;
   }
 
+  // sequence가 20개여도 정상적으로 재생 가능
   state.mode = "play";
   state.isPlaying = true;
   state.currentTime = 0;
   state.currentActionIndex = 0;
   state.errorMessage = "";
+
   notify();
   return true;
 }
@@ -117,7 +123,8 @@ export function setCurrentTime(seconds, silent = false) {
   state.currentTime = clamp(Number(seconds) || 0, 0, totalTime);
   state.currentActionIndex = getCurrentActionIndex(state.sequence, state.currentTime);
 
-if (totalTime > 0 && state.currentTime >= totalTime) {
+  // 재생 시간이 전체 시간을 넘으면 자동 정지
+  if (totalTime > 0 && state.currentTime >= totalTime) {
     state.currentTime = totalTime;
     state.isPlaying = false;
     notify();
@@ -127,17 +134,23 @@ if (totalTime > 0 && state.currentTime >= totalTime) {
 }
 
 export function advancePlayback(deltaSeconds) {
+  // edit 모드에서는 선택한 동작을 preview 화면에서 계속 재생
   if (state.mode === "edit" && state.selectedActionId) {
     state.previewTime += deltaSeconds;
     return;
   }
-  
+
+  // play 모드가 아니거나 일시정지 상태면 시간 진행하지 않음
   if (state.mode !== "play" || !state.isPlaying) return;
+
   setCurrentTime(state.currentTime + deltaSeconds, true);
 }
 
 function makeInstanceId() {
-  if (globalThis.crypto?.randomUUID) return globalThis.crypto.randomUUID();
+  if (globalThis.crypto?.randomUUID) {
+    return globalThis.crypto.randomUUID();
+  }
+
   return `seq-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
